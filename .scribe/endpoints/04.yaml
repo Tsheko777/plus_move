@@ -1,0 +1,168 @@
+name: Deliveries
+description: ''
+endpoints:
+  -
+    httpMethods:
+      - GET
+    uri: api/deliveries
+    metadata:
+      groupName: Deliveries
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get delivery summary'
+      description: 'This returns total deliveries, deliveries in transit, returned deliveries (this week), and recent deliveries.'
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "total": 80,
+            "intransit": 10,
+            "returned": 5,
+            "recentDeliveries": [
+              {
+                "tracking_number": "ABC123",
+                "customer_name": "John Doe",
+                "driver_name": "Jane Driver",
+                "delivery_date": "2024-06-10",
+                "status": "delivered"
+              }
+            ]
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/deliveries/update
+    metadata:
+      groupName: Deliveries
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Update delivery status'
+      description: 'Use this to update a delivery status to one of: `in_transit`, `delivered`, `returned`, `created`, `shipped`.'
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      delivery_id:
+        name: delivery_id
+        description: 'The ID of the delivery.'
+        required: true
+        example: 42
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      status:
+        name: status
+        description: 'The new status. Must be one of: in_transit, delivered, returned, created, shipped.'
+        required: true
+        example: delivered
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      delivery_id: 42
+      status: delivered
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Delivery updated to delivered"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/deliveries/package/get
+    metadata:
+      groupName: Deliveries
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get package information'
+      description: 'Provide a tracking number to retrieve package and customer details.'
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      tracking_number:
+        name: tracking_number
+        description: 'The tracking number of the package.'
+        required: true
+        example: ABC123
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      tracking_number: ABC123
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "tracking_number": "ABC123",
+            "name": "John Doe",
+            "weight": 5,
+            "address": "123 Street, City",
+            "description": "Fragile item"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []

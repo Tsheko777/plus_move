@@ -1,0 +1,652 @@
+{
+    "variable": [
+        {
+            "id": "baseUrl",
+            "key": "baseUrl",
+            "type": "string",
+            "name": "string",
+            "value": "http:\/\/localhost"
+        }
+    ],
+    "info": {
+        "name": "Plus_Move API Documentation",
+        "_postman_id": "ed7e1188-6813-4cf6-8a75-904f3ae52b17",
+        "description": "",
+        "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
+    },
+    "item": [
+        {
+            "name": "Authentication",
+            "description": "This endpoint registers a new user and logs them in.",
+            "item": [
+                {
+                    "name": "Register a new user",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "register",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/register"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"John Doe\",\"email\":\"john@example.com\",\"password\":\"secret123\",\"password_confirmation\":\"secret123\"}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 302,
+                            "body": "Redirects to the dashboard after successful registration and login.",
+                            "name": "Success"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n \"message\": \"The given data was invalid.\",\n \"errors\": {\n   \"email\": [\"The email has already been taken.\"],\n   \"password\": [\"The password confirmation does not match.\"]\n }\n}",
+                            "name": "Validation error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Log in a user",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "login",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/login"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"email\":\"user@example.com\",\"password\":\"password123\"}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 302,
+                            "body": "Redirects to the dashboard after login.",
+                            "name": "Success"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n \"message\": \"The given data was invalid.\",\n \"errors\": {\n   \"email\": [\"These credentials do not match our records.\"]\n }\n}",
+                            "name": "Validation error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Log out the authenticated user",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "logout",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/logout"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 302,
+                            "body": "Redirects to the homepage after logout.",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Dashboard",
+            "description": "",
+            "item": [
+                {
+                    "name": "Get dashboard summary",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/dashboard",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/dashboard"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "This endpoint returns a summary of the dashboard including total deliveries, returns, active drivers, and recent deliveries.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"totalDeliveries\": 120,\n  \"currentReturns\": 8,\n  \"activeDrivers\": 5,\n  \"recentDeliveries\": [\n    {\n      \"tracking_number\": \"ABC123\",\n      \"name\": \"Jane Doe\",\n      \"status\": \"delivered\",\n      \"delivered_at\": \"2024-06-09T12:34:56Z\"\n    }\n  ]\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Deliveries",
+            "description": "",
+            "item": [
+                {
+                    "name": "Get delivery summary",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/deliveries",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/deliveries"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "This returns total deliveries, deliveries in transit, returned deliveries (this week), and recent deliveries.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"total\": 80,\n  \"intransit\": 10,\n  \"returned\": 5,\n  \"recentDeliveries\": [\n    {\n      \"tracking_number\": \"ABC123\",\n      \"customer_name\": \"John Doe\",\n      \"driver_name\": \"Jane Driver\",\n      \"delivery_date\": \"2024-06-10\",\n      \"status\": \"delivered\"\n    }\n  ]\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update delivery status",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/deliveries\/update",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/deliveries\/update"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"delivery_id\":42,\"status\":\"delivered\"}"
+                        },
+                        "description": "Use this to update a delivery status to one of: `in_transit`, `delivered`, `returned`, `created`, `shipped`.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Delivery updated to delivered\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Get package information",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/deliveries\/package\/get",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/deliveries\/package\/get"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"tracking_number\":\"ABC123\"}"
+                        },
+                        "description": "Provide a tracking number to retrieve package and customer details.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"tracking_number\": \"ABC123\",\n  \"name\": \"John Doe\",\n  \"weight\": 5,\n  \"address\": \"123 Street, City\",\n  \"description\": \"Fragile item\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Packages",
+            "description": "",
+            "item": [
+                {
+                    "name": "Get package statistics and free drivers.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/packages",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/packages"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"total\": 100,\n  \"delivered\": 80,\n  \"pending\": 20,\n  \"recentPending\": [\n    {\n      \"created_at\": \"2025-06-01T12:00:00Z\",\n      \"delivered_at\": null,\n      \"weight\": 1.2,\n      \"tracking_number\": \"PKG123456\",\n      \"name\": \"John Doe\",\n      \"status\": \"created\",\n      \"delivery_created_at\": \"2025-06-01T10:00:00Z\"\n    }\n  ],\n  \"freeDrivers\": [\n    {\n      \"id\": 5,\n      \"deliveries\": 0\n    }\n  ]\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Create a new package.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/packages\/create",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/packages\/create"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"customer\":\"John Doe\",\"weight\":2.5,\"address\":\"123 Main St\",\"date\":\"2025-06-10\",\"city\":\"New York\",\"description\":\"Fragile glassware\",\"phone\":\"0123456789\"}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"New package has been created PKG123456\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"Failed to create package\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete a package by tracking number.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/packages\/delete",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/packages\/delete"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"tracking_number\":\"PKG123456\"}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Package with tracking number PKG123456 has been deleted\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"Package not found\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Get delivery information for a package.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/packages\/delivery\/get",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/packages\/delivery\/get"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"tracking_number\":\"PKG123456\"}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"customer\": \"John Doe\",\n  \"driver\": \"Jane Smith\",\n  \"date\": \"2025-06-01\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Password Reset",
+            "description": "This endpoint sends a password reset link to the provided email address.\nIf the email exists in the system, a reset link will be sent.",
+            "item": [
+                {
+                    "name": "Request a password reset link",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "forgot-password",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/forgot-password"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"email\":\"user@example.com\"}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 302,
+                            "body": "{\n \"status\": \"A reset link will be sent if the account exists.\"\n}",
+                            "name": "Success"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n \"message\": \"The given data was invalid.\",\n \"errors\": {\n   \"email\": [\"The email field is required.\"]\n }\n}",
+                            "name": "Validation error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Reset the user's password",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "reset-password",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/reset-password"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"token\":\"eyJ0eXAiOiJKV1QiLC...\",\"email\":\"user@example.com\",\"password\":\"newsecurepassword\",\"password_confirmation\":\"newsecurepassword\"}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 302,
+                            "body": "Redirects to the login page with a success message.",
+                            "name": "Success"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n \"message\": \"The given data was invalid.\",\n \"errors\": {\n   \"email\": [\"This password reset token is invalid.\"]\n }\n}",
+                            "name": "Validation error"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Reports",
+            "description": "",
+            "item": [
+                {
+                    "name": "Get summary of reports and stats.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/reports",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/reports"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"dailyReport\": 5,\n  \"returnRate\": 12,\n  \"generatedBy\": \"Alice\",\n  \"dailyLog\": [\n    {\n      \"date\": \"2025-06-09\",\n      \"created_at\": \"2025-06-09T14:00:00Z\",\n      \"name\": \"Alice\",\n      \"notes\": \"Monthly summary\",\n      \"total_returns\": 10,\n      \"total_deliveries\": 80,\n      \"total_reports\": 1\n    }\n  ]\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Create a new report.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/reports\/create",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/reports\/create"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"notes\":\"\\\"Daily delivery summary\\\"\"}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Report created successfully\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The notes field is required.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "auth": {
+        "type": "noauth"
+    }
+}

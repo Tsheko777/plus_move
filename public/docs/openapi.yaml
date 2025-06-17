@@ -1,0 +1,927 @@
+openapi: 3.0.3
+info:
+  title: 'Plus_Move API Documentation'
+  description: ''
+  version: 1.0.0
+servers:
+  -
+    url: 'http://localhost'
+tags:
+  -
+    name: Authentication
+    description: 'This endpoint registers a new user and logs them in.'
+  -
+    name: Dashboard
+    description: ''
+  -
+    name: Deliveries
+    description: ''
+  -
+    name: Packages
+    description: ''
+  -
+    name: 'Password Reset'
+    description: "This endpoint sends a password reset link to the provided email address.\nIf the email exists in the system, a reset link will be sent."
+  -
+    name: Reports
+    description: ''
+paths:
+  /register:
+    post:
+      summary: 'Register a new user'
+      operationId: registerANewUser
+      description: ''
+      parameters: []
+      responses:
+        302:
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'Redirects to the dashboard after successful registration and login.'
+        422:
+          description: 'Validation error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The given data was invalid.'
+                  errors:
+                    email:
+                      - 'The email has already been taken.'
+                    password:
+                      - 'The password confirmation does not match.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The given data was invalid.'
+                  errors:
+                    type: object
+                    properties:
+                      email:
+                        type: array
+                        example:
+                          - 'The email has already been taken.'
+                        items:
+                          type: string
+                      password:
+                        type: array
+                        example:
+                          - 'The password confirmation does not match.'
+                        items:
+                          type: string
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: "The user's full name."
+                  example: 'John Doe'
+                  nullable: false
+                email:
+                  type: string
+                  description: "The user's email address. Must be unique."
+                  example: john@example.com
+                  nullable: false
+                password:
+                  type: string
+                  description: 'The password, confirmed with password_confirmation. Minimum 8 characters.'
+                  example: secret123
+                  nullable: false
+                password_confirmation:
+                  type: string
+                  description: 'Must match the password.'
+                  example: secret123
+                  nullable: false
+              required:
+                - name
+                - email
+                - password
+                - password_confirmation
+      security: []
+  /login:
+    post:
+      summary: 'Log in a user'
+      operationId: logInAUser
+      description: ''
+      parameters: []
+      responses:
+        302:
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'Redirects to the dashboard after login.'
+        422:
+          description: 'Validation error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The given data was invalid.'
+                  errors:
+                    email:
+                      - 'These credentials do not match our records.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The given data was invalid.'
+                  errors:
+                    type: object
+                    properties:
+                      email:
+                        type: array
+                        example:
+                          - 'These credentials do not match our records.'
+                        items:
+                          type: string
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: "The user's email."
+                  example: user@example.com
+                  nullable: false
+                password:
+                  type: string
+                  description: "The user's password."
+                  example: password123
+                  nullable: false
+              required:
+                - email
+                - password
+      security: []
+  /logout:
+    post:
+      summary: 'Log out the authenticated user'
+      operationId: logOutTheAuthenticatedUser
+      description: ''
+      parameters: []
+      responses:
+        302:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'Redirects to the homepage after logout.'
+      tags:
+        - Authentication
+  /api/dashboard:
+    get:
+      summary: 'Get dashboard summary'
+      operationId: getDashboardSummary
+      description: 'This endpoint returns a summary of the dashboard including total deliveries, returns, active drivers, and recent deliveries.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  totalDeliveries: 120
+                  currentReturns: 8
+                  activeDrivers: 5
+                  recentDeliveries:
+                    -
+                      tracking_number: ABC123
+                      name: 'Jane Doe'
+                      status: delivered
+                      delivered_at: '2024-06-09T12:34:56Z'
+                properties:
+                  totalDeliveries:
+                    type: integer
+                    example: 120
+                  currentReturns:
+                    type: integer
+                    example: 8
+                  activeDrivers:
+                    type: integer
+                    example: 5
+                  recentDeliveries:
+                    type: array
+                    example:
+                      -
+                        tracking_number: ABC123
+                        name: 'Jane Doe'
+                        status: delivered
+                        delivered_at: '2024-06-09T12:34:56Z'
+                    items:
+                      type: object
+                      properties:
+                        tracking_number:
+                          type: string
+                          example: ABC123
+                        name:
+                          type: string
+                          example: 'Jane Doe'
+                        status:
+                          type: string
+                          example: delivered
+                        delivered_at:
+                          type: string
+                          example: '2024-06-09T12:34:56Z'
+      tags:
+        - Dashboard
+      security: []
+  /api/deliveries:
+    get:
+      summary: 'Get delivery summary'
+      operationId: getDeliverySummary
+      description: 'This returns total deliveries, deliveries in transit, returned deliveries (this week), and recent deliveries.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  total: 80
+                  intransit: 10
+                  returned: 5
+                  recentDeliveries:
+                    -
+                      tracking_number: ABC123
+                      customer_name: 'John Doe'
+                      driver_name: 'Jane Driver'
+                      delivery_date: '2024-06-10'
+                      status: delivered
+                properties:
+                  total:
+                    type: integer
+                    example: 80
+                  intransit:
+                    type: integer
+                    example: 10
+                  returned:
+                    type: integer
+                    example: 5
+                  recentDeliveries:
+                    type: array
+                    example:
+                      -
+                        tracking_number: ABC123
+                        customer_name: 'John Doe'
+                        driver_name: 'Jane Driver'
+                        delivery_date: '2024-06-10'
+                        status: delivered
+                    items:
+                      type: object
+                      properties:
+                        tracking_number:
+                          type: string
+                          example: ABC123
+                        customer_name:
+                          type: string
+                          example: 'John Doe'
+                        driver_name:
+                          type: string
+                          example: 'Jane Driver'
+                        delivery_date:
+                          type: string
+                          example: '2024-06-10'
+                        status:
+                          type: string
+                          example: delivered
+      tags:
+        - Deliveries
+      security: []
+  /api/deliveries/update:
+    post:
+      summary: 'Update delivery status'
+      operationId: updateDeliveryStatus
+      description: 'Use this to update a delivery status to one of: `in_transit`, `delivered`, `returned`, `created`, `shipped`.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Delivery updated to delivered'
+                properties:
+                  message:
+                    type: string
+                    example: 'Delivery updated to delivered'
+      tags:
+        - Deliveries
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                delivery_id:
+                  type: integer
+                  description: 'The ID of the delivery.'
+                  example: 42
+                  nullable: false
+                status:
+                  type: string
+                  description: 'The new status. Must be one of: in_transit, delivered, returned, created, shipped.'
+                  example: delivered
+                  nullable: false
+              required:
+                - delivery_id
+                - status
+      security: []
+  /api/deliveries/package/get:
+    post:
+      summary: 'Get package information'
+      operationId: getPackageInformation
+      description: 'Provide a tracking number to retrieve package and customer details.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  tracking_number: ABC123
+                  name: 'John Doe'
+                  weight: 5
+                  address: '123 Street, City'
+                  description: 'Fragile item'
+                properties:
+                  tracking_number:
+                    type: string
+                    example: ABC123
+                  name:
+                    type: string
+                    example: 'John Doe'
+                  weight:
+                    type: integer
+                    example: 5
+                  address:
+                    type: string
+                    example: '123 Street, City'
+                  description:
+                    type: string
+                    example: 'Fragile item'
+      tags:
+        - Deliveries
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tracking_number:
+                  type: string
+                  description: 'The tracking number of the package.'
+                  example: ABC123
+                  nullable: false
+              required:
+                - tracking_number
+      security: []
+  /api/packages:
+    get:
+      summary: 'Get package statistics and free drivers.'
+      operationId: getPackageStatisticsAndFreeDrivers
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  total: 100
+                  delivered: 80
+                  pending: 20
+                  recentPending:
+                    -
+                      created_at: '2025-06-01T12:00:00Z'
+                      delivered_at: null
+                      weight: 1.2
+                      tracking_number: PKG123456
+                      name: 'John Doe'
+                      status: created
+                      delivery_created_at: '2025-06-01T10:00:00Z'
+                  freeDrivers:
+                    -
+                      id: 5
+                      deliveries: 0
+                properties:
+                  total:
+                    type: integer
+                    example: 100
+                  delivered:
+                    type: integer
+                    example: 80
+                  pending:
+                    type: integer
+                    example: 20
+                  recentPending:
+                    type: array
+                    example:
+                      -
+                        created_at: '2025-06-01T12:00:00Z'
+                        delivered_at: null
+                        weight: 1.2
+                        tracking_number: PKG123456
+                        name: 'John Doe'
+                        status: created
+                        delivery_created_at: '2025-06-01T10:00:00Z'
+                    items:
+                      type: object
+                      properties:
+                        created_at:
+                          type: string
+                          example: '2025-06-01T12:00:00Z'
+                        delivered_at:
+                          type: string
+                          example: null
+                        weight:
+                          type: number
+                          example: 1.2
+                        tracking_number:
+                          type: string
+                          example: PKG123456
+                        name:
+                          type: string
+                          example: 'John Doe'
+                        status:
+                          type: string
+                          example: created
+                        delivery_created_at:
+                          type: string
+                          example: '2025-06-01T10:00:00Z'
+                  freeDrivers:
+                    type: array
+                    example:
+                      -
+                        id: 5
+                        deliveries: 0
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 5
+                        deliveries:
+                          type: integer
+                          example: 0
+      tags:
+        - Packages
+      security: []
+  /api/packages/create:
+    post:
+      summary: 'Create a new package.'
+      operationId: createANewPackage
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'New package has been created PKG123456'
+                properties:
+                  message:
+                    type: string
+                    example: 'New package has been created PKG123456'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Failed to create package'
+                properties:
+                  message:
+                    type: string
+                    example: 'Failed to create package'
+      tags:
+        - Packages
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                customer:
+                  type: string
+                  description: 'Customer name.'
+                  example: 'John Doe'
+                  nullable: false
+                weight:
+                  type: number
+                  description: 'Package weight in kg.'
+                  example: 2.5
+                  nullable: false
+                address:
+                  type: string
+                  description: 'Customer address.'
+                  example: '123 Main St'
+                  nullable: false
+                date:
+                  type: string
+                  description: 'Delivery date (Y-m-d).'
+                  example: '2025-06-10'
+                  nullable: false
+                city:
+                  type: string
+                  description: 'Customer city.'
+                  example: 'New York'
+                  nullable: false
+                description:
+                  type: string
+                  description: 'Package description.'
+                  example: 'Fragile glassware'
+                  nullable: false
+                phone:
+                  type: string
+                  description: 'Customer phone number, 10 digits starting with 0.'
+                  example: '0123456789'
+                  nullable: false
+              required:
+                - customer
+                - weight
+                - address
+                - date
+                - city
+                - description
+                - phone
+      security: []
+  /api/packages/delete:
+    post:
+      summary: 'Delete a package by tracking number.'
+      operationId: deleteAPackageByTrackingNumber
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Package with tracking number PKG123456 has been deleted'
+                properties:
+                  message:
+                    type: string
+                    example: 'Package with tracking number PKG123456 has been deleted'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Package not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Package not found'
+      tags:
+        - Packages
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tracking_number:
+                  type: string
+                  description: 'Package tracking number.'
+                  example: PKG123456
+                  nullable: false
+              required:
+                - tracking_number
+      security: []
+  /api/packages/delivery/get:
+    post:
+      summary: 'Get delivery information for a package.'
+      operationId: getDeliveryInformationForAPackage
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  customer: 'John Doe'
+                  driver: 'Jane Smith'
+                  date: '2025-06-01'
+                properties:
+                  customer:
+                    type: string
+                    example: 'John Doe'
+                  driver:
+                    type: string
+                    example: 'Jane Smith'
+                  date:
+                    type: string
+                    example: '2025-06-01'
+      tags:
+        - Packages
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tracking_number:
+                  type: string
+                  description: 'Package tracking number.'
+                  example: PKG123456
+                  nullable: false
+              required:
+                - tracking_number
+      security: []
+  /forgot-password:
+    post:
+      summary: 'Request a password reset link'
+      operationId: requestAPasswordResetLink
+      description: ''
+      parameters: []
+      responses:
+        302:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: 'A reset link will be sent if the account exists.'
+                properties:
+                  status:
+                    type: string
+                    example: 'A reset link will be sent if the account exists.'
+        422:
+          description: 'Validation error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The given data was invalid.'
+                  errors:
+                    email:
+                      - 'The email field is required.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The given data was invalid.'
+                  errors:
+                    type: object
+                    properties:
+                      email:
+                        type: array
+                        example:
+                          - 'The email field is required.'
+                        items:
+                          type: string
+      tags:
+        - 'Password Reset'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: 'The email address of the user.'
+                  example: user@example.com
+                  nullable: false
+              required:
+                - email
+      security: []
+  /reset-password:
+    post:
+      summary: "Reset the user's password"
+      operationId: resetTheUsersPassword
+      description: ''
+      parameters: []
+      responses:
+        302:
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'Redirects to the login page with a success message.'
+        422:
+          description: 'Validation error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The given data was invalid.'
+                  errors:
+                    email:
+                      - 'This password reset token is invalid.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The given data was invalid.'
+                  errors:
+                    type: object
+                    properties:
+                      email:
+                        type: array
+                        example:
+                          - 'This password reset token is invalid.'
+                        items:
+                          type: string
+      tags:
+        - 'Password Reset'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  description: 'The password reset token received in email.'
+                  example: eyJ0eXAiOiJKV1QiLC...
+                  nullable: false
+                email:
+                  type: string
+                  description: "The user's email address."
+                  example: user@example.com
+                  nullable: false
+                password:
+                  type: string
+                  description: 'The new password. Must be confirmed.'
+                  example: newsecurepassword
+                  nullable: false
+                password_confirmation:
+                  type: string
+                  description: 'Must match the password.'
+                  example: newsecurepassword
+                  nullable: false
+              required:
+                - token
+                - email
+                - password
+                - password_confirmation
+      security: []
+  /api/reports:
+    get:
+      summary: 'Get summary of reports and stats.'
+      operationId: getSummaryOfReportsAndStats
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  dailyReport: 5
+                  returnRate: 12
+                  generatedBy: Alice
+                  dailyLog:
+                    -
+                      date: '2025-06-09'
+                      created_at: '2025-06-09T14:00:00Z'
+                      name: Alice
+                      notes: 'Monthly summary'
+                      total_returns: 10
+                      total_deliveries: 80
+                      total_reports: 1
+                properties:
+                  dailyReport:
+                    type: integer
+                    example: 5
+                  returnRate:
+                    type: integer
+                    example: 12
+                  generatedBy:
+                    type: string
+                    example: Alice
+                  dailyLog:
+                    type: array
+                    example:
+                      -
+                        date: '2025-06-09'
+                        created_at: '2025-06-09T14:00:00Z'
+                        name: Alice
+                        notes: 'Monthly summary'
+                        total_returns: 10
+                        total_deliveries: 80
+                        total_reports: 1
+                    items:
+                      type: object
+                      properties:
+                        date:
+                          type: string
+                          example: '2025-06-09'
+                        created_at:
+                          type: string
+                          example: '2025-06-09T14:00:00Z'
+                        name:
+                          type: string
+                          example: Alice
+                        notes:
+                          type: string
+                          example: 'Monthly summary'
+                        total_returns:
+                          type: integer
+                          example: 10
+                        total_deliveries:
+                          type: integer
+                          example: 80
+                        total_reports:
+                          type: integer
+                          example: 1
+      tags:
+        - Reports
+      security: []
+  /api/reports/create:
+    post:
+      summary: 'Create a new report.'
+      operationId: createANewReport
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Report created successfully'
+                properties:
+                  message:
+                    type: string
+                    example: 'Report created successfully'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The notes field is required.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The notes field is required.'
+      tags:
+        - Reports
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                notes:
+                  type: string
+                  description: 'Notes for the report. Max length 1000 characters.'
+                  example: '"Daily delivery summary"'
+                  nullable: false
+              required:
+                - notes
+      security: []

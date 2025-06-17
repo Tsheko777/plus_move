@@ -1,0 +1,297 @@
+name: Packages
+description: ''
+endpoints:
+  -
+    httpMethods:
+      - GET
+    uri: api/packages
+    metadata:
+      groupName: Packages
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get package statistics and free drivers.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "total": 100,
+            "delivered": 80,
+            "pending": 20,
+            "recentPending": [
+              {
+                "created_at": "2025-06-01T12:00:00Z",
+                "delivered_at": null,
+                "weight": 1.2,
+                "tracking_number": "PKG123456",
+                "name": "John Doe",
+                "status": "created",
+                "delivery_created_at": "2025-06-01T10:00:00Z"
+              }
+            ],
+            "freeDrivers": [
+              {
+                "id": 5,
+                "deliveries": 0
+              }
+            ]
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/packages/create
+    metadata:
+      groupName: Packages
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Create a new package.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      customer:
+        name: customer
+        description: 'Customer name.'
+        required: true
+        example: 'John Doe'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      weight:
+        name: weight
+        description: 'Package weight in kg.'
+        required: true
+        example: 2.5
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      address:
+        name: address
+        description: 'Customer address.'
+        required: true
+        example: '123 Main St'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      date:
+        name: date
+        description: 'Delivery date (Y-m-d).'
+        required: true
+        example: '2025-06-10'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      city:
+        name: city
+        description: 'Customer city.'
+        required: true
+        example: 'New York'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      description:
+        name: description
+        description: 'Package description.'
+        required: true
+        example: 'Fragile glassware'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      phone:
+        name: phone
+        description: 'Customer phone number, 10 digits starting with 0.'
+        required: true
+        example: '0123456789'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      customer: 'John Doe'
+      weight: 2.5
+      address: '123 Main St'
+      date: '2025-06-10'
+      city: 'New York'
+      description: 'Fragile glassware'
+      phone: '0123456789'
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "New package has been created PKG123456"
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+            "message": "Failed to create package"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/packages/delete
+    metadata:
+      groupName: Packages
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Delete a package by tracking number.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      tracking_number:
+        name: tracking_number
+        description: 'Package tracking number.'
+        required: true
+        example: PKG123456
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      tracking_number: PKG123456
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Package with tracking number PKG123456 has been deleted"
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+            "message": "Package not found"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/packages/delivery/get
+    metadata:
+      groupName: Packages
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get delivery information for a package.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      tracking_number:
+        name: tracking_number
+        description: 'Package tracking number.'
+        required: true
+        example: PKG123456
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      tracking_number: PKG123456
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "customer": "John Doe",
+            "driver": "Jane Smith",
+            "date": "2025-06-01"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
