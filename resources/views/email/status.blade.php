@@ -55,6 +55,9 @@
         </p>
 
         <p style="color:#9ca3af;">Package updated at {{ $updated_at }}</p>
+        <hr style="margin:30px 0; border:none; border-top:1px solid #e5e7eb;" />
+
+        <a href="{{ url('/track/package/' . $tracking_number) }}">Track status</a>
 
         <hr style="margin:30px 0; border:none; border-top:1px solid #e5e7eb;" />
 

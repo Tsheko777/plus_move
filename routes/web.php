@@ -5,6 +5,7 @@ use App\Http\Controllers\api\DeliveriesController;
 use App\Http\Controllers\api\DriversController;
 use App\Http\Controllers\api\PackagesController;
 use App\Http\Controllers\api\ReportsController;
+use App\Http\Controllers\api\TrackingController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,9 +25,12 @@ Route::get('/email', function () {
         'address' => '1535 Block M Haniview Maubane 0412',
         'delivery_date' => '12 April 2025 10:23:18',
         'updated_at' => '12 June 2025 10:23:18',
-        'driver_name' => "Andre Coleman"
+        'driver_name' => "Andre Coleman",
+        'tracking_number' => 'TRK00015',
     ]);
 })->name('email');
+
+Route::get('/track/package/{tracking_number}', [TrackingController::class, 'track'])->name('track.package');
 
 Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('dashboard', function () {

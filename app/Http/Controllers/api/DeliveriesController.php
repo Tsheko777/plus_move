@@ -127,6 +127,7 @@ class DeliveriesController extends Controller
                 ->join('tbl_users as drivers', 'drivers.id', '=', 'tbl_deliveries.driver_id')
                 ->where(['tbl_deliveries.status' => $status])
                 ->select(
+                    'tbl_packages.delivery_id',
                     'tbl_deliveries.updated_at',
                     'tbl_packages.tracking_number',
                     'tbl_deliveries.status',
@@ -141,6 +142,7 @@ class DeliveriesController extends Controller
             ->join('tbl_orderCustomers as customers', 'customers.id', '=', 'tbl_packages.customer_id')
             ->join('tbl_users as drivers', 'drivers.id', '=', 'tbl_deliveries.driver_id')
             ->select(
+                'tbl_packages.delivery_id',
                 'tbl_deliveries.updated_at',
                 'tbl_packages.tracking_number',
                 'tbl_deliveries.status',
